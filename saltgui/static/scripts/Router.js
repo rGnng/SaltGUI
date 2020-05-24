@@ -17,6 +17,7 @@ import {LoginPage} from "./pages/Login.js";
 import {LogoutPage} from "./pages/Logout.js";
 import {MinionsPage} from "./pages/Minions.js";
 import {OptionsPage} from "./pages/Options.js";
+import {OrchestrationsPage} from "./pages/Orchestrations.js";
 import {PillarsMinionPage} from "./pages/PillarsMinion.js";
 import {PillarsPage} from "./pages/Pillars.js";
 import {ReactorsPage} from "./pages/Reactors.js";
@@ -53,6 +54,7 @@ export class Router {
     this._registerPage(this.templatesPage = new TemplatesPage(this));
     this._registerPage(this.eventsPage = new EventsPage(this));
     this._registerPage(this.reactorsPage = new ReactorsPage(this));
+    this._registerPage(this.orchestrationsPage = new OrchestrationsPage(this));
     this._registerPage(this.optionsPage = new OptionsPage(this));
     this._registerPage(this.issuesPage = new IssuesPage(this));
     this._registerPage(new LogoutPage(this));
@@ -151,6 +153,7 @@ export class Router {
     this._registerMenuItem(null, "jobs", "jobs");
     this._registerMenuItem("jobs", "highstate", "highstate");
     this._registerMenuItem("jobs", "templates", "templates");
+    this._registerMenuItem("jobs", "orchestrations", "orchestrations");
     this._registerMenuItem(null, "events", "eventsview");
     this._registerMenuItem("events", "reactors", "reactors");
     this._registerMenuItem(null, "issues", "issues");
@@ -229,6 +232,15 @@ export class Router {
       } else {
         item.classList.add("menu-item-hidden");
       }
+    }
+
+    // show orchestrations menu item if orchestrations defined
+    const orchestrationsText = Utils.getStorageItem("session", "orchestrations", "");
+    if (orchestrationsText) {
+      const item1 = document.getElementById("button-orchestrations1");
+      item1.classList.remove("menu-item-hidden");
+      const item2 = document.getElementById("button-orchestrations2");
+      item2.classList.remove("menu-item-hidden");
     }
   }
 
