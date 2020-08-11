@@ -1,7 +1,6 @@
 /* global console document Hilitor window */
 
 import {Character} from "./Character.js";
-import {DropDownMenu} from "./DropDown.js";
 
 export class Utils {
 
@@ -204,81 +203,6 @@ export class Utils {
       return 0;
     }
     return regs[0].length > 0 ? 1 : 2;
-  }
-
-  static makeSearchBox (pSearchButton, pTable, pFieldList = null) {
-
-    const div = Utils.createDiv("search-box", "");
-    div.style.display = "none";
-
-    const menuAndFieldDiv = Utils.createDiv("search-menu-and-field", "");
-
-    const searchOptionsMenu = new DropDownMenu(menuAndFieldDiv, true);
-
-    const input = document.createElement("input");
-    input.type = "text";
-    input.spellcheck = false;
-    input.classList.add("filter-text");
-    input.placeholder = Character.LEFT_POINTING_MAGNIFYING_GLASS;
-    if (pFieldList) {
-      input.setAttribute("list", pFieldList);
-    }
-    menuAndFieldDiv.append(input);
-
-    div.append(menuAndFieldDiv);
-
-    const errorDiv = Utils.createDiv("search-error", "");
-    errorDiv.style.display = "none";
-    div.append(errorDiv);
-
-    searchOptionsMenu.addMenuItem(
-      "Case sensitive", (ev) => {
-        Utils._updateSearchOption(ev, pTable, searchOptionsMenu, input);
-      });
-    searchOptionsMenu.addMenuItem(
-      "Regular expression", (ev) => {
-        Utils._updateSearchOption(ev, pTable, searchOptionsMenu, input);
-      });
-    searchOptionsMenu.addMenuItem(
-      "Invert search", (ev) => {
-        Utils._updateSearchOption(ev, pTable, searchOptionsMenu, input);
-      });
-
-    // make the search function active
-    pSearchButton.addEventListener("click", (pClickEvent) => {
-      Utils.hideShowTableSearchBar(div, pTable);
-      pClickEvent.stopPropagation();
-    });
-
-    return div;
-  }
-
-  static _updateSearchOption (ev, pTable, pSearchOptionsMenu, pInput) {
-    ev.target._value = !ev.target._value;
-
-    let menuItemText = ev.target.innerText;
-    menuItemText = menuItemText.replace(/^. /, "");
-    if (ev.target._value === true) {
-      menuItemText = Character.HEAVY_CHECK_MARK + " " + menuItemText;
-    }
-    ev.target.innerText = menuItemText;
-
-    Utils._updateTableFilter(
-      pTable,
-      pInput.value,
-      pSearchOptionsMenu.menuDropdownContent);
-
-    let placeholder = Character.LEFT_POINTING_MAGNIFYING_GLASS;
-    if (pSearchOptionsMenu.menuDropdownContent.childNodes[0]._value === true) {
-      placeholder += " caseSensitive";
-    }
-    if (pSearchOptionsMenu.menuDropdownContent.childNodes[1]._value === true) {
-      placeholder += " regExp";
-    }
-    if (pSearchOptionsMenu.menuDropdownContent.childNodes[2]._value === true) {
-      placeholder += " invertSearch";
-    }
-    pInput.placeholder = placeholder;
   }
 
   static addTableHelp (pStartElement, pHelpText, pStyle = "bottom-right") {

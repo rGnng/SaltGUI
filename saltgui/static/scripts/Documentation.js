@@ -17,13 +17,13 @@ export class Documentation {
     this.router = pRouter;
     this.commandbox = pCommandBox;
 
-    pCommandBox.cmdmenu.addMenuItem(
+    pCommandBox.cmdmenu.addMenuItemCmd(
       () => Documentation._manualRunMenuSysDocPrepare(),
       () => this._manualRunMenuSysDocRun());
-    pCommandBox.cmdmenu.addMenuItem(
+    pCommandBox.cmdmenu.addMenuItemCmd(
       () => Documentation._manualRunMenuHtmlDocPrepare(),
       () => Documentation._manualRunMenuHtmlDocRun());
-    pCommandBox.cmdmenu.addMenuItem(
+    pCommandBox.cmdmenu.addMenuItemCmd(
       () => Documentation._manualRunMenuBeaconNamePrepare(),
       () => Documentation._manualRunMenuBeaconNameRun());
 
@@ -117,7 +117,7 @@ export class Documentation {
       dummyCommand = "sys.doc " + cmd;
     }
 
-    const targetType = TargetType.menuTargetType._value;
+    const targetType = TargetType.menuTargetType.getValue();
 
     const func = this.commandbox.getRunParams(targetType, target, docCommand, true);
     if (func === null) {

@@ -1,3 +1,5 @@
+/* global */
+
 import {Character} from "./Character.js";
 import {Utils} from "./Utils.js";
 
@@ -8,7 +10,7 @@ import {Utils} from "./Utils.js";
 //    a) sets the title using pMenuItem.innerText = "xyz"
 //    b) arranges the visibility using pMenuItem.style.display = true/false
 // 2: the callback function
-//    called when the menu item is selected: (pClickEvent) => { ... }
+//    called when the menu item is selected: () => { ... }
 // all menu items are re-validated when the menu pops up
 // when all menu items are invisible, the menu-button must be made invisible
 // since this can happen at any time, this cannot be done when the menu is shown
@@ -17,6 +19,8 @@ import {Utils} from "./Utils.js";
 // on the visibility of its menu items. when all menu items are hidden, so is
 // the menu. when at least one item is visible, the menu is visible
 // remember to call verifyApp() when that is potentially the case
+
+// superclass for DropDownMenuRadio, DropDownMenuCheckBox and DropDownMenuCmd
 
 export class DropDownMenu {
 
@@ -70,19 +74,20 @@ export class DropDownMenu {
     let visibleCount = 0;
     if (this.menuDropdownContent) {
       for (const chld of this.menuDropdownContent.children) {
-        const verifyCallBack = chld.verifyCallBack;
-        if (verifyCallBack) {
-          const title = verifyCallBack(chld);
+        const titleCallBack = chld._titleCallBack;
+        if (titleCallBack) {
+          const title = titleCallBack(this, chld);
           if (title === null) {
             chld.style.display = "none";
             continue;
           }
-          chld.innerText = DropDownMenu._sanitizeMenuItemTitle(title);
+          chld.innerHTML = DropDownMenu._sanitizeMenuItemTitle(title);
           chld.style.removeProperty("display");
         }
         visibleCount += 1;
       }
     }
+
     // hide the menu when it has no visible menu-items
     const displayVisible = this.menuDropdown.tagName === "TD" ? "table-cell" : "inline-block";
     const displayInvisible = "none";
@@ -102,7 +107,7 @@ export class DropDownMenu {
   // function is called each time the menu opens
   // This allows dynamic menuitem titles (use menuitem.innerText)
   // or visibility (use menuitem.style.display = "none"/"inline-block")
-  addMenuItem (pTitle, pCallBack, pValue) {
+  addMenuItem (pValue, pTitle, pCallBack) {
     const button = Utils.createDiv("run-command-button", "...");
     if (pValue) {
       button._value = pValue;
@@ -110,14 +115,14 @@ export class DropDownMenu {
     if (typeof pTitle === "string") {
       button.innerText = DropDownMenu._sanitizeMenuItemTitle(pTitle);
     } else {
-      button.verifyCallBack = pTitle;
+      button._titleCallBack = pTitle;
     }
     button.addEventListener("click", (pClickEvent) => {
       pClickEvent.target.parentElement.style.display = "none";
       window.setTimeout(() => {
         pClickEvent.target.parentElement.style.display = "";
       }, 500);
-      this._callback(pClickEvent, pCallBack, pValue);
+      this._callback(pCallBack, pValue);
       pClickEvent.stopPropagation();
     });
     this.menuDropdownContent.appendChild(button);
@@ -125,9 +130,10 @@ export class DropDownMenu {
     return button;
   }
 
-  _callback (pClickEvent, pCallBack, pValue) {
+  _callback (pCallBack, pValue) {
     this._value = pValue;
-    pCallBack(pClickEvent);
+    pCallBack(this, pValue);
+    this.verifyAll();
   }
 
   setTitle (pTitle) {
@@ -139,19 +145,5 @@ export class DropDownMenu {
     }
     pTitle += Character.BLACK_DOWN_POINTING_TRIANGLE;
     this.menuButton.innerText = DropDownMenu._sanitizeMenuItemTitle(pTitle);
-  }
-
-  __showMenu () {
-    this.menuDropdown.style.display = "inline-block";
-  }
-
-  __hideMenu () {
-    this.menuDropdown.style.display = "none";
-  }
-
-  clearMenu () {
-    while (this.menuDropdownContent.firstChild) {
-      this.menuDropdownContent.removeChild(this.menuDropdownContent.firstChild);
-    }
   }
 }

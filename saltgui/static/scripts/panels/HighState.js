@@ -1,7 +1,7 @@
 /* global window */
 
 import {Character} from "../Character.js";
-import {DropDownMenu} from "../DropDown.js";
+import {DropDownMenuCmd} from "../DropDownCmd.js";
 import {JobPanel} from "./Job.js";
 import {JobsPanel} from "./Jobs.js";
 import {Output} from "../output/Output.js";
@@ -55,14 +55,14 @@ export class HighStatePanel extends Panel {
   }
 
   _addMenuItemStateApply (pMenu, pMinionId) {
-    pMenu.addMenuItem("Apply state...", () => {
+    pMenu.addMenuItemCmd("Apply state...", () => {
       const cmdArr = ["state.apply"];
       this.runCommand("", pMinionId, cmdArr);
     });
   }
 
   _addMenuItemStateApplyTest (pMenu, pMinionId) {
-    pMenu.addMenuItem("Test state...", () => {
+    pMenu.addMenuItemCmd("Test state...", () => {
       const cmdArr = ["state.apply", "test=", true];
       this.runCommand("", pMinionId, cmdArr);
     });
@@ -81,7 +81,7 @@ export class HighStatePanel extends Panel {
 
       // preliminary dropdown menu
       const minionTr = this.table.querySelector("#" + Utils.getIdFromMinionId(minionId));
-      const menu = new DropDownMenu(minionTr, true);
+      const menu = new DropDownMenuCmd(minionTr, true);
       this._addMenuItemStateApply(menu, minionId);
       this._addMenuItemStateApplyTest(menu, minionId);
 
@@ -292,7 +292,7 @@ export class HighStatePanel extends Panel {
       const startTimeText = Output.dateTimeStr(jobData.StartTime);
       minionTr.appendChild(Utils.createTd("starttime", startTimeText));
 
-      const menu = new DropDownMenu(minionTr, true);
+      const menu = new DropDownMenuCmd(minionTr, true);
       this._addMenuItemStateApply(menu, minionId);
       this._addMenuItemStateApplyTest(menu, minionId);
       this._addJobsMenuItemShowDetails(menu, jobData, minionId);
@@ -329,7 +329,7 @@ export class HighStatePanel extends Panel {
   }
 
   _addJobsMenuItemShowDetails (pMenu, pJob, pMinionId) {
-    pMenu.addMenuItem("Show details", () => {
+    pMenu.addMenuItemCmd("Show details", () => {
       this.router.goTo("job", {"id": pJob.jid, "minionid": pMinionId});
     });
   }
