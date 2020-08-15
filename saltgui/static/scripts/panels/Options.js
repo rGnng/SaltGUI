@@ -51,7 +51,7 @@ export class OptionsPanel extends Panel {
         [
           ["doc", "doc", "none:no doc"],
           ["highstate", "saltguihighstate:SaltGUI highstate", "highstate:Normal highstate", "none:No highstate"],
-          ["output", "json", "nested", "yaml"]
+          ["output", "json", "nested", "yaml", "toml"]
         ]
       ],
       [
@@ -360,6 +360,7 @@ export class OptionsPanel extends Panel {
     if (this._isSelected("output-formats", "output", "json")) value += ",json";
     if (this._isSelected("output-formats", "output", "nested")) value += ",nested";
     if (this._isSelected("output-formats", "output", "yaml")) value += ",yaml";
+    if (this._isSelected("output-formats", "output", "toml")) value += ",toml";
     value = value.replace(/^,/, "");
     /* eslint-enable curly */
     const outputFormatsTd = this.div.querySelector("#option-output-formats-value");
