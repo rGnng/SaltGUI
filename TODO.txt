@@ -1,0 +1,14 @@
+Branch zzz-characters
+("zzz" to move it to the bottom of the list)
+attempt to use only a supplied font
+
+PRO:
+* it makes sure that SaltGUI works properly everywhere
+
+CON:
+* it may not actually be needed, except for cases that can be solved by upgrading OS or BROWSER
+* the web-fonts may actually not work in some places
+* it is a bit complicated
+
+VERDICT:
+Keep until there is an actual request for it
